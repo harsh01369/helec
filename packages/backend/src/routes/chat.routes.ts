@@ -80,7 +80,7 @@ export async function chatRoutes(fastify: FastifyInstance) {
         });
       }
 
-      fastify.log.error("Chat message processing failed:", error);
+      fastify.log.error({ error }, "Chat message processing failed");
 
       return reply.status(500).send({
         status: "error",

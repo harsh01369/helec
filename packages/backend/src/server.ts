@@ -61,7 +61,7 @@ server.get("/health/db", async () => {
       message: "Database connection successful",
     };
   } catch (error: any) {
-    server.log.error("Database connection failed:", error);
+    server.log.error({ error }, "Database connection failed");
     return {
       status: "error",
       database: "connection failed",
