@@ -1,0 +1,51 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Environment variables (NEVER COMMIT THESE)
+.env
+.env.local
+.env.production
+.env.*.local
+*.env
+
+# Build outputs
+dist
+build
+.output
+.svelte-kit
+.vercel
+.netlify
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/settings.json
+.idea
+*.sublime-workspace
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Testing
+coverage
+.nyc_output
+
+# Misc
+.cache
+.temp
+tmp
