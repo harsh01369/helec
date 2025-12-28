@@ -1,6 +1,5 @@
 <script lang="ts">
   import ChatWidget from "$lib/ChatWidget.svelte";
-  // ← MUST have the $ sign!
 </script>
 
 <div
@@ -14,6 +13,5 @@
     bottom right corner.
   </p>
 
-  <!-- The chat widget appears here -->
   <ChatWidget />
 </div>

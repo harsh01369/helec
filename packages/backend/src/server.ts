@@ -6,19 +6,16 @@ import { Server as SocketServer } from "socket.io";
 
 import { config } from "./config/env.js";
 import { chatRoutes } from "./routes/chat.routes.js";
-import { generateResponse } from "./services/llm.service.js"; // your AI function
+import { generateResponse } from "./services/llm.service.js";
 
-// Initialize Prisma client (shared instance)
 const prisma = new PrismaClient({
   log: config.isDev ? ["query", "info", "warn", "error"] : ["error"],
 });
 
-// Create Fastify server instance
 const server = Fastify({
   logger: config.isDev,
 });
 
-// Global error handler
 server.setErrorHandler((error, request, reply) => {
   server.log.error(error);
 
@@ -29,7 +26,6 @@ server.setErrorHandler((error, request, reply) => {
   });
 });
 
-// ── Health check endpoints ──
 server.get("/health", async () => ({
   status: "ok",
   environment: config.nodeEnv,
@@ -71,7 +67,6 @@ server.get("/health/db", async () => {
   }
 });
 
-// ── Register REST chat routes ──
 server.register(
   async (fastify) => {
     await fastify.register(chatRoutes);
@@ -79,10 +74,9 @@ server.register(
   { prefix: "/api/chat" }
 );
 
-// ── Attach Socket.IO ──
 const io = new SocketServer(server.server, {
   cors: {
-    origin: "*", // ← Development only! Change to specific domains later
+    origin: "*",
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -91,18 +85,13 @@ const io = new SocketServer(server.server, {
   pingInterval: 25000,
 });
 
-// Socket.IO real-time logic
 io.on("connection", (socket) => {
-  console.log(`[Socket.IO] New client connected: ${socket.id}`);
-
-  // 1. Client joins a conversation room
   socket.on("join_conversation", (conversationId: string) => {
     if (!conversationId || typeof conversationId !== "string") {
       socket.emit("error", { message: "Invalid or missing conversation ID" });
       return;
     }
 
-    // Basic UUID format check (optional but helpful)
     const uuidRegex =
       /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     if (!uuidRegex.test(conversationId)) {
@@ -111,30 +100,17 @@ io.on("connection", (socket) => {
     }
 
     socket.join(`conversation:${conversationId}`);
-    console.log(
-      `[Socket.IO] Client ${socket.id} joined conversation ${conversationId}`
-    );
 
-    // Optional: Notify room
     io.to(`conversation:${conversationId}`).emit("user_joined", {
       userId: socket.id,
       message: "Someone joined the conversation",
     });
   });
 
-  // 2. Handle real-time message sending
   socket.on("send_message", async (data: any) => {
-    // Log the EXACT raw data received (this will show us the problem)
-    console.log(
-      "[DEBUG] Raw send_message data received:",
-      JSON.stringify(data, null, 2)
-    );
-
-    // Extract safely (handle common tester quirks)
     let content = data?.content;
     let conversationId = data?.conversationId;
 
-    // If tester sends array or string — try to parse
     if (Array.isArray(data) && data.length > 0) {
       content = data[0]?.content;
       conversationId = data[0]?.conversationId;
@@ -152,33 +128,24 @@ io.on("connection", (socket) => {
 
     if (!content) {
       socket.emit("error", { message: "Missing or empty content" });
-      console.log("[DEBUG] Rejected: missing/empty content after parsing");
       return;
     }
 
     if (!conversationId) {
       socket.emit("error", { message: "Missing conversationId" });
-      console.log("[DEBUG] Rejected: missing conversationId");
       return;
     }
 
-    // UUID check
     const uuidRegex =
       /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     if (!uuidRegex.test(conversationId)) {
       socket.emit("error", {
         message: "Invalid conversationId format (must be UUID)",
       });
-      console.log("[DEBUG] Rejected: invalid UUID");
       return;
     }
 
     try {
-      console.log(
-        "[DEBUG] Processing valid message for conversation:",
-        conversationId
-      );
-
       const userMessage = await prisma.message.create({
         data: {
           conversationId,
@@ -220,8 +187,6 @@ io.on("connection", (socket) => {
         senderType: "assistant",
         createdAt: assistantMessage.createdAt.toISOString(),
       });
-
-      console.log("[DEBUG] Message processed successfully");
     } catch (error) {
       console.error("[Socket.IO] Error:", error);
       socket.emit("error", {
@@ -231,7 +196,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  // 3. User typing indicator
   socket.on("typing", () => {
     const rooms = Array.from(socket.rooms);
     const conversationRoom = rooms.find((r) => r.startsWith("conversation:"));
@@ -242,15 +206,11 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("disconnect", () => {
-    console.log(`[Socket.IO] Client disconnected: ${socket.id}`);
-  });
+  socket.on("disconnect", () => {});
 });
 
-// Make io available if needed elsewhere
 server.decorate("io", io);
 
-// ── Graceful shutdown ──
 const shutdown = async (signal: string) => {
   console.log(`\nReceived ${signal}. Shutting down gracefully...`);
 
@@ -271,12 +231,10 @@ const shutdown = async (signal: string) => {
 process.on("SIGTERM", () => shutdown("SIGTERM"));
 process.on("SIGINT", () => shutdown("SIGINT"));
 
-// Start the server
 const start = async () => {
   try {
-    // Register CORS plugin before starting the server
     await server.register(cors, {
-      origin: true, // Allow all origins in development
+      origin: true,
       credentials: true,
     });
 

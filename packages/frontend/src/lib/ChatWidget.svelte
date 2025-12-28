@@ -11,46 +11,30 @@
   let errorMessage = "";
   let showError = false;
 
-  // Get backend URL from environment variable or auto-detect
-  // Environment variable takes precedence, otherwise use production URL if deployed
   let backendUrl = "http://localhost:3000";
 
-  // Check if running in browser
   if (typeof window !== 'undefined') {
-    // First try environment variables
     if (import.meta.env.PUBLIC_BACKEND_URL) {
       backendUrl = import.meta.env.PUBLIC_BACKEND_URL;
     } else if (import.meta.env.VITE_PUBLIC_BACKEND_URL) {
       backendUrl = import.meta.env.VITE_PUBLIC_BACKEND_URL;
     } else if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-      // If deployed (not localhost), use production backend
       backendUrl = "https://helec-backend.onrender.com";
     }
   }
 
-  // Debug log to verify the URL being used
-  console.log("[ChatWidget] Backend URL:", backendUrl);
-  console.log("[ChatWidget] Available env vars:", {
-    PUBLIC_BACKEND_URL: import.meta.env.PUBLIC_BACKEND_URL,
-    VITE_PUBLIC_BACKEND_URL: import.meta.env.VITE_PUBLIC_BACKEND_URL,
-    hostname: typeof window !== 'undefined' ? window.location.hostname : 'SSR'
-  });
-
-  // Show error toast
   function showErrorToast(message: string) {
     errorMessage = message;
     showError = true;
     setTimeout(() => {
       showError = false;
-    }, 5000); // Hide after 5 seconds
+    }, 5000);
   }
 
   onMount(async () => {
-    // Load or create conversation
     conversationId = localStorage.getItem("helec_conversation_id") || "";
 
     if (conversationId) {
-      // Load existing conversation history
       try {
         const response = await fetch(
           `${backendUrl}/api/chat/conversation/${conversationId}`
@@ -59,22 +43,18 @@
 
         if (data.status === "success" && data.data.messages) {
           messages = data.data.messages;
-          console.log(`Loaded ${messages.length} messages from conversation ${conversationId}`);
         } else {
-          // Conversation not found, clear invalid ID
           localStorage.removeItem("helec_conversation_id");
           conversationId = "";
         }
       } catch (error) {
         console.error("Failed to load conversation history:", error);
-        // Clear invalid conversation ID
         localStorage.removeItem("helec_conversation_id");
         conversationId = "";
       }
     }
 
     if (!conversationId) {
-      // Create a new conversation via REST API
       try {
         const response = await fetch(`${backendUrl}/api/chat/message`, {
           method: "POST",
@@ -86,25 +66,21 @@
         if (data.status === "success" && data.conversationId) {
           conversationId = data.conversationId;
           localStorage.setItem("helec_conversation_id", conversationId);
-          // Load initial messages
           if (data.messages && data.messages.length > 0) {
             messages = data.messages;
           }
-          console.log("Created new conversation:", conversationId);
         }
       } catch (error) {
         console.error("Failed to create conversation:", error);
       }
     }
 
-    // Connect Socket.IO
     socket = io(backendUrl, {
       reconnection: true,
       transports: ["websocket", "polling"],
     });
 
     socket.on("connect", () => {
-      console.log("Socket connected to backend");
       if (conversationId) {
         socket.emit("join_conversation", conversationId);
       }
@@ -126,8 +102,6 @@
   });
 
   function sendMessage() {
-    console.log("sendMessage called", { input, conversationId });
-
     if (!input.trim()) {
       showErrorToast("Please type a message first");
       return;
@@ -153,7 +127,6 @@
       conversationId,
     };
 
-    console.log("Emitting send_message:", message);
     socket.emit("send_message", message);
     input = "";
   }
@@ -169,7 +142,6 @@
       messages = [];
       conversationId = "";
       showChat = false;
-      // Reload to create new conversation
       window.location.reload();
     }
   }

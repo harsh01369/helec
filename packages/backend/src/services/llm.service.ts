@@ -1,9 +1,8 @@
 // packages/backend/src/services/llm.service.ts
 import { Groq } from "groq-sdk";
 import { config } from "../config/env.js";
-import prisma from "../lib/prisma.js"; // ← your shared prisma
+import prisma from "../lib/prisma.js";
 
-// Safety check
 if (!config.groqApiKey) {
   throw new Error("GROQ_API_KEY is missing in environment variables");
 }
@@ -12,23 +11,18 @@ const groq = new Groq({
   apiKey: config.groqApiKey,
 });
 
-/**
- * Generate AI response with conversation memory
- */
 export async function generateResponse(
   userMessage: string,
   conversationId: string,
   maxHistory: number = 10
 ): Promise<string> {
   try {
-    // Load recent history
     const previousMessages = await prisma.message.findMany({
       where: { conversationId },
       orderBy: { createdAt: "desc" },
       take: maxHistory,
     });
 
-    // Format for Groq (oldest first)
     const history = previousMessages.reverse().map((msg) => ({
       role: (msg.senderType === "user" ? "user" : "assistant") as "user" | "assistant",
       content: msg.content,
