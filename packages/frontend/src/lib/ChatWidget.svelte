@@ -1,7 +1,6 @@
 <script lang="ts">
   import { io } from "socket.io-client";
   import { onMount } from "svelte";
-  import { PUBLIC_BACKEND_URL } from '$env/static/public';
 
   let messages: any[] = [];
   let input = "";
@@ -12,7 +11,8 @@
   let errorMessage = "";
   let showError = false;
 
-  const backendUrl = PUBLIC_BACKEND_URL || "http://localhost:3000";
+  // Use Vite's environment variable system
+  const backendUrl = import.meta.env.PUBLIC_BACKEND_URL || "http://localhost:3000";
 
   // Show error toast
   function showErrorToast(message: string) {
