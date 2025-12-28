@@ -690,9 +690,9 @@ MIT License - feel free to use this project however you'd like!
 Built with ❤️ by **Harsh** for the Spur Founding Engineer take-home assignment.
 
 **Contact:**
-- GitHub: [@YOUR_GITHUB]
-- Email: your.email@example.com
-- LinkedIn: [Your Profile]
+- GitHub: https://github.com/harsh01369
+- Email: work.harshkhetia@gmail.com
+- LinkedIn: https://www.linkedin.com/in/harsh-khetia111/
 
 ---
 
