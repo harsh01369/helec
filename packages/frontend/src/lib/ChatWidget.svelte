@@ -11,8 +11,30 @@
   let errorMessage = "";
   let showError = false;
 
-  // Use Vite's environment variable system
-  const backendUrl = import.meta.env.PUBLIC_BACKEND_URL || "http://localhost:3000";
+  // Get backend URL from environment variable or auto-detect
+  // Environment variable takes precedence, otherwise use production URL if deployed
+  let backendUrl = "http://localhost:3000";
+
+  // Check if running in browser
+  if (typeof window !== 'undefined') {
+    // First try environment variables
+    if (import.meta.env.PUBLIC_BACKEND_URL) {
+      backendUrl = import.meta.env.PUBLIC_BACKEND_URL;
+    } else if (import.meta.env.VITE_PUBLIC_BACKEND_URL) {
+      backendUrl = import.meta.env.VITE_PUBLIC_BACKEND_URL;
+    } else if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      // If deployed (not localhost), use production backend
+      backendUrl = "https://helec-backend.onrender.com";
+    }
+  }
+
+  // Debug log to verify the URL being used
+  console.log("[ChatWidget] Backend URL:", backendUrl);
+  console.log("[ChatWidget] Available env vars:", {
+    PUBLIC_BACKEND_URL: import.meta.env.PUBLIC_BACKEND_URL,
+    VITE_PUBLIC_BACKEND_URL: import.meta.env.VITE_PUBLIC_BACKEND_URL,
+    hostname: typeof window !== 'undefined' ? window.location.hostname : 'SSR'
+  });
 
   // Show error toast
   function showErrorToast(message: string) {
