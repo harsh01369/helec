@@ -10,10 +10,7 @@ export async function chatRoutes(fastify: FastifyInstance) {
       // 1. Validate input with detailed error messages
       const schema = z.object({
         content: z
-          .string({
-            required_error: "Message content is required",
-            invalid_type_error: "Message must be a string",
-          })
+          .string()
           .min(1, "Message cannot be empty")
           .max(2000, "Message is too long (maximum 2000 characters)")
           .trim(),

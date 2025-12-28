@@ -1,7 +1,8 @@
 // packages/backend/src/socket.ts
 import { FastifyInstance } from "fastify";
-import { Server as SocketServer } from "socket.io";
-import prisma from "./lib/prisma.js"; // your shared Prisma
+import { Server as SocketServer, Socket } from "socket.io";
+import prisma from "./lib/prisma.js";
+import { generateResponse } from "./services/llm.service.js";
 
 // We'll use this to associate socket with conversation
 interface ExtendedSocket extends Socket {
