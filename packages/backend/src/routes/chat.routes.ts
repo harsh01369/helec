@@ -69,7 +69,7 @@ export async function chatRoutes(fastify: FastifyInstance) {
         conversationId: targetConversationId,
         messages: [userMessage, assistantMessage], // always array - easier for frontend
       });
-    } catch (error) {
+    } catch (error: any) {
       // Handle validation errors
       if (error instanceof z.ZodError) {
         const firstError = error.issues[0];

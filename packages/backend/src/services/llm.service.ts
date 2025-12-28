@@ -30,7 +30,7 @@ export async function generateResponse(
 
     // Format for Groq (oldest first)
     const history = previousMessages.reverse().map((msg) => ({
-      role: msg.senderType === "user" ? "user" : "assistant",
+      role: (msg.senderType === "user" ? "user" : "assistant") as "user" | "assistant",
       content: msg.content,
     }));
 

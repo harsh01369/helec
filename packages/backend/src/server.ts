@@ -24,8 +24,8 @@ server.setErrorHandler((error, request, reply) => {
 
   reply.status(500).send({
     status: "error",
-    message: config.isDev ? error.message : "Internal Server Error",
-    ...(config.isDev && { stack: error.stack }),
+    message: config.isDev && error instanceof Error ? error.message : "Internal Server Error",
+    ...(config.isDev && error instanceof Error && { stack: error.stack }),
   });
 });
 
@@ -60,7 +60,7 @@ server.get("/health/db", async () => {
       timestamp: new Date().toISOString(),
       message: "Database connection successful",
     };
-  } catch (error) {
+  } catch (error: any) {
     server.log.error("Database connection failed:", error);
     return {
       status: "error",
