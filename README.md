@@ -1,113 +1,109 @@
-# 🤖 HELEC - AI-Powered Live Chat Support Agent
+# HELEC - AI-Powered E-commerce Chat Assistant
 
 **Helpful E-commerce Live Engine for Customers**
 
-A real-time AI customer support chat system built for e-commerce stores, featuring intelligent conversation management, Socket.IO real-time messaging, and integration with Groq's LLM API.
+A real-time customer support chat system for e-commerce stores with AI-powered responses, built using modern web technologies.
 
-🚀 **[Live Demo](https://your-app-name.vercel.app)** | 📺 **[Video Walkthrough](#)** | 📖 **[Documentation](#architecture)**
+🚀 **[Live Demo](https://helec-frontend.vercel.app)** | 🔧 **[Backend API](https://helec-backend.onrender.com)**
 
-> **Note:** Add your deployed URLs here after deployment to Vercel (frontend) and Render (backend)
-
----
-
-## ✨ Features
-
-### Core Functionality
-- ✅ **Real-time Chat** - Instant messaging powered by Socket.IO
-- ✅ **AI-Powered Responses** - Context-aware answers using Groq (llama-3.3-70b)
-- ✅ **Conversation Memory** - Maintains context across multiple messages
-- ✅ **Persistent Sessions** - Conversations saved and resumed automatically
-- ✅ **Beautiful UI** - Floating chat widget with DaisyUI styling
-- ✅ **Error Handling** - Graceful degradation with user-friendly error messages
-- ✅ **Input Validation** - Server-side and client-side validation
-- ✅ **Typing Indicators** - Shows when AI is processing
-
-### Technical Highlights
-- 🔄 Real-time bidirectional communication (Socket.IO)
-- 💾 PostgreSQL database with Prisma ORM
-- 🎯 TypeScript end-to-end for type safety
-- 🎨 SvelteKit 2.0 with Svelte 5 frontend
-- ⚡ Fastify backend for high performance
-- 🧠 Groq LLM with comprehensive e-commerce knowledge base
-- 🔒 Input sanitization and rate limiting ready
-- 📱 Responsive design with mobile support
+> **Note:** The backend runs on Render's free tier, which means it goes to sleep after 15 minutes of inactivity. The first request after sleep takes 30-60 seconds to wake up the server. Subsequent requests are instant.
 
 ---
 
-## 🏗️ Architecture
+## What This Does
 
-### System Overview
+HELEC is a complete chat support system that lets customers ask questions and get intelligent, context-aware answers in real-time. Think of it as a smart assistant that understands your store's policies, products, and common customer questions.
 
-```
-┌─────────────┐
-│   Browser   │
-│  (Svelte)   │
-└──────┬──────┘
-       │ HTTP + WebSocket
-       ▼
-┌─────────────────┐
-│ SvelteKit       │
-│ Frontend Server │
-│ Port: 5173      │
-└──────┬──────────┘
-       │ REST API + Socket.IO
-       ▼
-┌─────────────────┐      ┌──────────────┐
-│ Fastify Backend │◄────►│ PostgreSQL   │
-│ + Socket.IO     │      │ (via Prisma) │
-│ Port: 3000      │      └──────────────┘
-└──────┬──────────┘
-       │ API Calls
-       ▼
-┌─────────────────┐
-│ Groq LLM API    │
-│ llama-3.3-70b   │
-└─────────────────┘
-```
+The system remembers conversation history, so customers don't have to repeat themselves, and it provides helpful responses using AI while maintaining a friendly, professional tone.
 
-### Technology Stack
+### Key Features
+
+- **Real-time messaging** using WebSocket connections (Socket.IO)
+- **AI-powered responses** via Groq's llama-3.3-70b model
+- **Conversation memory** - maintains context across multiple messages
+- **Session persistence** - conversations are saved and can be resumed
+- **Clean, responsive UI** with a floating chat widget
+- **Mobile-friendly** design that works on all devices
+- **Error handling** with user-friendly messages
+
+---
+
+## Live Demo
+
+**Frontend:** https://helec-frontend.vercel.app
+
+**Backend API:** https://helec-backend.onrender.com
+
+Try opening the chat bubble (💬 in the bottom-right) and asking questions like:
+- "Do you have laptops?"
+- "What's your return policy?"
+- "I need help with my order"
+
+---
+
+## Tech Stack
 
 **Backend:**
-- Node.js 22+ with TypeScript
-- Fastify (web framework)
-- Socket.IO (real-time communication)
-- Prisma (ORM)
-- PostgreSQL (database)
-- Groq SDK (LLM integration)
-- Zod (validation)
+- Node.js with TypeScript
+- Fastify (lightweight web framework)
+- Socket.IO for real-time communication
+- Prisma ORM with PostgreSQL
+- Groq SDK for AI responses
 
 **Frontend:**
-- SvelteKit 2.0
-- Svelte 5 (next-gen reactivity)
-- TailwindCSS + DaisyUI
-- Socket.IO Client
-- TypeScript
+- SvelteKit 2.0 with Svelte 5
+- TailwindCSS + DaisyUI for styling
+- Socket.IO client
+- TypeScript throughout
 
-**DevOps:**
-- Docker Compose (local PostgreSQL)
-- pnpm (monorepo management)
-- tsx (TypeScript execution)
+**Infrastructure:**
+- Backend deployed on Render.com
+- Frontend deployed on Vercel
+- PostgreSQL database on Render
+- Local development uses Docker Compose
 
 ---
 
-## 🚀 Quick Start
+## How It Works
+
+```
+User Browser
+    ↓ (HTTP + WebSocket)
+SvelteKit Frontend (Vercel)
+    ↓ (REST API + Socket.IO)
+Fastify Backend (Render)
+    ↓
+├─→ PostgreSQL Database (conversation storage)
+└─→ Groq API (AI responses)
+```
+
+When you send a message:
+1. Frontend sends it via Socket.IO to the backend
+2. Backend saves the message to PostgreSQL
+3. Backend fetches recent conversation history
+4. Backend calls Groq API with context
+5. AI generates a response
+6. Backend saves the response and emits it back
+7. Frontend displays the response in real-time
+
+---
+
+## Local Development Setup
 
 ### Prerequisites
 
-- **Node.js** 20.x or higher ([Download](https://nodejs.org/))
-- **pnpm** 8.x or higher (`npm install -g pnpm`)
-- **Docker** and Docker Compose ([Install](https://docs.docker.com/get-docker/))
-- **Groq API Key** ([Get one free](https://console.groq.com/))
+- Node.js 20+ ([download here](https://nodejs.org/))
+- pnpm (`npm install -g pnpm`)
+- Docker and Docker Compose ([install here](https://docs.docker.com/get-docker/))
+- A Groq API key ([get one free](https://console.groq.com/))
 
-### Installation
+### Installation Steps
 
-1. **Clone the repository**
+1. **Clone the repo**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/helec.git
+   git clone https://github.com/harsh01369/helec.git
    cd helec
    ```
-
-   > **Note:** Replace `YOUR_USERNAME` with your actual GitHub username after pushing
 
 2. **Install dependencies**
    ```bash
@@ -116,69 +112,45 @@ A real-time AI customer support chat system built for e-commerce stores, featuri
 
 3. **Set up environment variables**
 
-   Create `.env` file in the `packages/backend` directory:
+   Copy the example file:
    ```bash
    cp packages/backend/.env.example packages/backend/.env
    ```
 
    Edit `packages/backend/.env` and add your Groq API key:
    ```env
-   # Server Configuration
    PORT=3000
    NODE_ENV=development
-
-   # Database (Docker default)
    DATABASE_URL="postgresql://helec_user:helec_pass_2025@localhost:5433/helec_dev?schema=public"
-
-   # Groq LLM API (REQUIRED)
-   GROQ_API_KEY=your_groq_api_key_here
-
-   # Optional: Other LLM providers (not currently used)
-   ANTHROPIC_API_KEY=
-   OPENAI_API_KEY=
-
-   # Security
-   JWT_SECRET=your_random_secret_here_change_in_production
-
-   # Frontend URL (for CORS)
+   GROQ_API_KEY=your_actual_groq_api_key_here
    FRONTEND_URL=http://localhost:5173
-
-   # Rate Limiting
-   RATE_LIMIT_MAX=100
-   RATE_LIMIT_WINDOW_MS=60000
    ```
 
-4. **Start PostgreSQL database**
+4. **Start PostgreSQL**
    ```bash
    docker-compose up -d
-   ```
-
-   Verify it's running:
-   ```bash
-   docker ps
-   # Should show postgres container on port 5433
    ```
 
 5. **Run database migrations**
    ```bash
    cd packages/backend
    pnpm prisma migrate dev
+   cd ../..
    ```
 
-6. **Start the backend server**
+6. **Start the backend** (in one terminal)
    ```bash
-   # From packages/backend directory
+   cd packages/backend
    pnpm dev
    ```
 
    You should see:
    ```
    Server listening on http://localhost:3000
-   Environment: development
    Ready to accept requests! 🚀
    ```
 
-7. **Start the frontend** (in a new terminal)
+7. **Start the frontend** (in another terminal)
    ```bash
    cd packages/frontend
    pnpm dev
@@ -186,524 +158,277 @@ A real-time AI customer support chat system built for e-commerce stores, featuri
 
    You should see:
    ```
-   VITE v6.4.1  ready in 1676 ms
+   VITE ready in 1676 ms
    ➜  Local:   http://localhost:5173/
    ```
 
-8. **Open the app**
+8. **Open your browser**
 
-   Visit http://localhost:5173/ in your browser
-
-   Click the 💬 chat bubble in the bottom-right corner and start chatting!
+   Go to http://localhost:5173/ and click the chat bubble!
 
 ---
 
-## 🧪 Testing the Chat
-
-Try these example conversations to see the AI in action:
-
-1. **Product Inquiries**
-   - "Do you sell headphones?"
-   - "What's your best laptop for students?"
-   - "I need a gift for someone who loves tech"
-
-2. **Policy Questions**
-   - "What's your return policy?"
-   - "Do you ship internationally?"
-   - "How long does shipping take?"
-
-3. **Support Issues**
-   - "My order hasn't arrived yet"
-   - "I want to return a product"
-   - "Do you have warranty on electronics?"
-
-4. **Test Conversation Memory**
-   - Send a message about looking for a phone
-   - Follow up with "What colors does it come in?"
-   - The AI should remember you were asking about a phone
-
-5. **Test Session Persistence**
-   - Chat with the bot
-   - Refresh the page
-   - Your conversation history should still be there!
-
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 helec/
 ├── packages/
-│   ├── backend/                    # Backend API server
+│   ├── backend/
 │   │   ├── src/
-│   │   │   ├── config/            # Configuration
-│   │   │   │   └── env.ts         # Environment validation
-│   │   │   ├── lib/               # Shared utilities
-│   │   │   │   └── prisma.ts      # Database client
-│   │   │   ├── routes/            # API endpoints
-│   │   │   │   └── chat.routes.ts # Chat endpoints
-│   │   │   ├── services/          # Business logic
-│   │   │   │   └── llm.service.ts # Groq LLM integration
-│   │   │   └── server.ts          # Main server + Socket.IO
+│   │   │   ├── config/          # Environment config
+│   │   │   ├── lib/             # Shared utilities
+│   │   │   ├── routes/          # API endpoints
+│   │   │   ├── services/        # Business logic (LLM integration)
+│   │   │   └── server.ts        # Main server + Socket.IO setup
 │   │   ├── prisma/
-│   │   │   ├── schema.prisma      # Database schema
-│   │   │   └── migrations/        # Database migrations
-│   │   ├── .env                   # Environment variables (gitignored)
-│   │   ├── .env.example           # Environment template
-│   │   ├── package.json
-│   │   └── tsconfig.json
+│   │   │   └── schema.prisma    # Database schema
+│   │   └── package.json
 │   │
-│   ├── frontend/                  # SvelteKit frontend
-│   │   ├── src/
-│   │   │   ├── lib/
-│   │   │   │   └── ChatWidget.svelte  # Main chat component
-│   │   │   ├── routes/
-│   │   │   │   ├── +layout.svelte     # Layout wrapper
-│   │   │   │   └── +page.svelte       # Home page
-│   │   │   ├── app.css            # Global styles
-│   │   │   └── app.html           # HTML template
-│   │   ├── static/                # Static assets
-│   │   ├── package.json
-│   │   ├── svelte.config.mjs
-│   │   ├── tailwind.config.cjs
-│   │   ├── tsconfig.json
-│   │   └── vite.config.mjs
-│   │
-│   └── shared/                    # Shared types (future use)
+│   └── frontend/
+│       ├── src/
+│       │   ├── lib/
+│       │   │   └── ChatWidget.svelte  # Main chat component
+│       │   ├── routes/
+│       │   │   └── +page.svelte       # Homepage
+│       │   └── app.css
+│       └── package.json
 │
-├── docker-compose.yml             # PostgreSQL container
-├── package.json                   # Root package.json
-├── pnpm-workspace.yaml           # Monorepo config
-└── README.md                     # This file
+├── docker-compose.yml           # Local PostgreSQL
+└── package.json                 # Monorepo root
 ```
 
 ---
 
-## 🔌 API Endpoints
+## API Endpoints
 
 ### REST API
 
-#### POST `/api/chat/message`
-Send a message and get AI response.
+**POST `/api/chat/message`**
 
-**Request:**
+Send a message and get an AI response.
+
+Request:
 ```json
 {
   "content": "What's your return policy?",
-  "conversationId": "optional-uuid-here"
+  "conversationId": "optional-uuid"
 }
 ```
 
-**Response:**
+Response:
 ```json
 {
   "status": "success",
   "conversationId": "550e8400-e29b-41d4-a716-446655440000",
   "messages": [
-    {
-      "id": "msg-123",
-      "conversationId": "550e8400-...",
-      "content": "What's your return policy?",
-      "senderType": "user",
-      "createdAt": "2025-12-28T10:00:00Z"
-    },
-    {
-      "id": "msg-124",
-      "conversationId": "550e8400-...",
-      "content": "We offer 30-day hassle-free returns...",
-      "senderType": "assistant",
-      "createdAt": "2025-12-28T10:00:01Z"
-    }
+    { /* user message */ },
+    { /* assistant response */ }
   ]
 }
 ```
 
-#### GET `/api/chat/conversation/:id`
-Retrieve conversation history.
+**GET `/api/chat/conversation/:id`**
 
-**Response:**
-```json
-{
-  "status": "success",
-  "data": {
-    "id": "550e8400-e29b-41d4-a716-446655440000",
-    "createdAt": "2025-12-28T10:00:00Z",
-    "updatedAt": "2025-12-28T10:05:00Z",
-    "messages": [ /* array of messages */ ]
-  }
-}
-```
+Get conversation history.
 
 ### Socket.IO Events
 
-#### Client → Server
+**Client → Server:**
+- `join_conversation` - Join a conversation room
+- `send_message` - Send a new message
 
-**`join_conversation`**
-```javascript
-socket.emit('join_conversation', conversationId);
-```
-
-**`send_message`**
-```javascript
-socket.emit('send_message', {
-  content: 'Hello!',
-  conversationId: 'uuid-here'
-});
-```
-
-#### Server → Client
-
-**`new_message`**
-```javascript
-socket.on('new_message', (message) => {
-  // message: { id, conversationId, content, senderType, createdAt }
-});
-```
-
-**`typing`**
-```javascript
-socket.on('typing', ({ isTyping }) => {
-  // Show/hide typing indicator
-});
-```
+**Server → Client:**
+- `new_message` - New message received
+- `typing` - Typing indicator
+- `error` - Error notification
 
 ---
 
-## 🧠 LLM Integration
+## Design Decisions
 
-### Provider: Groq
+### Why These Technologies?
 
-We use **Groq** for ultra-fast LLM inference:
-- **Model:** llama-3.3-70b-versatile
-- **Temperature:** 0.7 (balanced creativity)
-- **Max Tokens:** 600
-- **Cost:** ~$0.10 per 1M tokens (very affordable!)
+**SvelteKit over React:**
+- Smaller bundle size (~40% smaller)
+- Faster rendering (no virtual DOM)
+- Cleaner code with less boilerplate
+- Svelte 5 has modern reactivity
 
-### Why Groq over OpenAI/Claude?
+**Fastify over Express:**
+- 2x faster request handling
+- Better TypeScript support out of the box
+- Modern architecture
 
-1. **Speed:** 10x faster inference (100+ tokens/sec)
-2. **Cost:** 90% cheaper than GPT-4
-3. **Quality:** llama-3.3-70b rivals GPT-4 for customer support
-4. **Reliability:** Excellent uptime
+**Socket.IO over native WebSockets:**
+- Auto-reconnection
+- Fallback to polling when needed
+- Room support for multi-user scenarios
+- Battle-tested reliability
 
-### Prompt Engineering
+**Groq for AI:**
+- 10x faster than OpenAI (100+ tokens/sec)
+- 90% cheaper than GPT-4
+- llama-3.3-70b quality is excellent for customer support
+- Free tier is generous
 
-Our system prompt is **comprehensive** (300+ lines) covering:
-- Store policies (shipping, returns, warranty)
-- Product categories and recommendations
-- Tone guidelines (friendly, professional, empathetic)
-- Conversation flow (greetings, follow-ups, closings)
-- Example responses for common scenarios
-- Safety guardrails (privacy, security)
-
-**Key Features:**
-- Context-aware (uses last 10 messages)
-- Proactive suggestions
-- Escalation protocols
-- Tone matching (formal for complaints, casual for browsing)
-
----
-
-## 🔒 Security & Robustness
-
-### Input Validation
-- ✅ Zod schema validation on all endpoints
-- ✅ Message length limits (1-2000 characters)
-- ✅ UUID format validation
-- ✅ XSS prevention (content sanitization)
-
-### Error Handling
-- ✅ Graceful LLM API failures with fallback messages
-- ✅ Network error recovery in frontend
-- ✅ Database connection error handling
-- ✅ User-friendly error toasts (not console.log)
-
-### Security Best Practices
-- ✅ Environment variables for secrets
-- ✅ CORS configuration
-- ✅ SQL injection prevention (Prisma parameterized queries)
-- ✅ Rate limiting ready (configured in env)
-
----
-
-## 🎨 Design Decisions
+**Prisma ORM:**
+- Type-safe database queries
+- Auto-generated TypeScript types
+- Easy migrations
+- Great developer experience
 
 ### Why Monorepo?
-- **Shared Types:** Common interfaces between frontend/backend
-- **Unified Deployment:** Single repo, easier CI/CD
-- **Developer Experience:** Install once, run both servers
 
-### Why SvelteKit over React?
-- **Performance:** No virtual DOM, faster rendering
-- **Bundle Size:** ~40% smaller than React
-- **Developer Experience:** Less boilerplate, cleaner code
-- **Future-Proof:** Svelte 5 has the latest reactivity model
-
-### Why Fastify over Express?
-- **Speed:** 2x faster request handling
-- **TypeScript:** Better native TypeScript support
-- **Schema Validation:** Built-in JSON schema validation
-- **Modern:** Active development, future-focused
-
-### Why Socket.IO?
-- **Reliability:** Auto-reconnection, fallback transports
-- **Rooms:** Easy multi-tenant architecture
-- **Battle-Tested:** Used by millions of apps
-- **Dev Experience:** Simple API, great documentation
-
-### Why Prisma?
-- **Type Safety:** Auto-generated TypeScript types
-- **Migrations:** Version-controlled database changes
-- **Developer Experience:** Intuitive query API
-- **Multi-Database:** Easy to switch databases later
+Keeping frontend and backend together makes it easier to:
+- Share TypeScript types
+- Deploy from one repository
+- Install dependencies once
+- Keep everything in sync
 
 ---
 
-## 🚧 Trade-offs & "If I Had More Time..."
+## What I'd Add With More Time
 
-### Current Limitations
+**Authentication & User Management**
+- Right now it's anonymous chat. I'd add user accounts, login, and proper session management so customers could see their chat history across devices.
 
-1. **No Authentication**
-   - Currently anonymous chat
-   - Would add: JWT tokens, user accounts, session management
+**Admin Dashboard**
+- A UI for support staff to view all ongoing conversations, jump in when needed, and see analytics like response times and common questions.
 
-2. **No Redis Caching**
-   - LLM responses not cached
-   - Would add: Cache frequent queries, reduce API costs 40%
+**Redis Caching**
+- Cache frequently asked questions to reduce LLM API calls and speed up responses. Could cut costs by 40% for common queries.
 
-3. **No Admin Dashboard**
-   - Can't view/manage conversations in UI
-   - Would add: Admin panel to see all chats, analytics
+**Product Catalog Integration**
+- Connect to actual product database so the AI can give real-time info on pricing, availability, and specifications instead of generic responses.
 
-4. **Hard-Coded Store Info**
-   - Policies in prompt, not database
-   - Would add: CMS for store policies, product catalog
+**File Uploads**
+- Let customers share screenshots of issues or photos of products they're asking about.
 
-5. **No File Uploads**
-   - Can't share images/documents
-   - Would add: Image upload for order issues, screenshots
+**Multi-language Support**
+- Detect user language and respond accordingly. Groq's models support many languages well.
 
-6. **No Multi-Language Support**
-   - English only
-   - Would add: i18n, detect user language, translate
+**Rate Limiting**
+- Prevent abuse by limiting requests per IP or user.
 
-### Future Enhancements
-
-**Phase 1 (Next 2 weeks):**
-- [ ] User authentication (JWT)
-- [ ] Redis caching layer
-- [ ] Admin dashboard (view conversations)
-- [ ] Rate limiting enforcement
-- [ ] Email notifications
-
-**Phase 2 (Next month):**
-- [ ] Product catalog integration
-- [ ] Order tracking via API
-- [ ] Multi-channel support (WhatsApp, Instagram)
-- [ ] Analytics dashboard
-- [ ] A/B testing framework
-
-**Phase 3 (Long-term):**
-- [ ] Voice chat support
-- [ ] Video co-browsing
-- [ ] AI-powered product recommendations
-- [ ] Sentiment analysis
-- [ ] Multi-language support
+**Analytics Dashboard**
+- Track metrics like:
+  - Average response time
+  - Customer satisfaction
+  - Most common questions
+  - Peak usage hours
 
 ---
 
-## 🚀 Deployment
+## Deployment
 
-### Backend Deployment (Render.com)
+The app is deployed and running at:
+- Frontend: https://helec-frontend.vercel.app (Vercel)
+- Backend: https://helec-backend.onrender.com (Render.com)
 
-1. **Create a new Web Service on Render**
-   - Go to [Render Dashboard](https://dashboard.render.com/)
-   - Click "New +" → "Web Service"
-   - Connect your GitHub repository
+### Important Note About Render Free Tier
 
-2. **Configure the service**
-   - **Name:** `helec-backend` (or your preference)
-   - **Region:** Choose closest to your users
-   - **Branch:** `master` (or `main`)
-   - **Root Directory:** Leave blank (monorepo detection)
-   - **Runtime:** Node
-   - **Build Command:**
-     ```bash
-     cd packages/backend && pnpm install && npx prisma generate && pnpm build
-     ```
-   - **Start Command:**
-     ```bash
-     cd packages/backend && npx prisma migrate deploy && pnpm start
-     ```
+The backend runs on Render's free tier, which has one quirk: **the server goes to sleep after 15 minutes of no activity**. When it's asleep, the first request will take 30-60 seconds to wake it up. After that, everything is instant.
 
-3. **Add Environment Variables**
-   Click "Environment" and add:
-   ```
-   NODE_ENV=production
-   PORT=3000
-   DATABASE_URL=<your_render_postgres_url>
-   GROQ_API_KEY=<your_groq_api_key>
-   JWT_SECRET=<generate_strong_random_string>
-   FRONTEND_URL=https://your-app-name.vercel.app
-   RATE_LIMIT_MAX=100
-   RATE_LIMIT_WINDOW_MS=60000
-   ```
+This is fine for a demo but in production you'd want a paid tier ($7/month) that keeps the server running 24/7.
 
-4. **Provision PostgreSQL Database**
-   - In the same Render dashboard, create a new PostgreSQL database
-   - Copy the "Internal Database URL"
-   - Paste it as `DATABASE_URL` in your web service environment variables
-   - **Or use Supabase/Railway for database hosting**
+### How to Deploy Your Own
 
-5. **Deploy!**
-   - Click "Create Web Service"
-   - Wait for build to complete (~3-5 minutes)
-   - Copy your backend URL: `https://helec-backend.onrender.com`
+**Backend (Render):**
+1. Create a Web Service on Render
+2. Connect your GitHub repo
+3. Set build command: `cd packages/backend && pnpm install && npx prisma generate && pnpm build`
+4. Set start command: `cd packages/backend && npx prisma migrate deploy && pnpm start`
+5. Add environment variables (DATABASE_URL, GROQ_API_KEY, etc.)
+6. Add a PostgreSQL database and connect it
 
-### Frontend Deployment (Vercel)
-
-1. **Import Project to Vercel**
-   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
-   - Click "Add New..." → "Project"
-   - Import your GitHub repository
-
-2. **Configure Build Settings**
-   - **Framework Preset:** SvelteKit
-   - **Root Directory:** `packages/frontend`
-   - **Build Command:** `pnpm build` (auto-detected)
-   - **Output Directory:** `.svelte-kit` (auto-detected)
-   - **Install Command:** `pnpm install`
-
-3. **Add Environment Variables**
-   Click "Environment Variables" and add:
-   ```
-   VITE_BACKEND_URL=https://helec-backend.onrender.com
-   ```
-
-4. **Deploy!**
-   - Click "Deploy"
-   - Wait for build to complete (~2-3 minutes)
-   - Your app will be live at: `https://your-app-name.vercel.app`
-
-5. **Update Backend CORS**
-   - Go back to Render dashboard
-   - Update `FRONTEND_URL` environment variable to your Vercel URL
-   - Trigger a redeploy
-
-### Post-Deployment Checklist
-
-- [ ] Test the live chat functionality
-- [ ] Verify conversation persistence works
-- [ ] Check error handling (try empty message, long message)
-- [ ] Test on mobile devices
-- [ ] Update README with live URLs
-- [ ] Test Socket.IO connection (check real-time messaging)
-- [ ] Monitor logs for errors
-
-### Alternative Deployment Options
-
-**Backend Alternatives:**
-- **Railway.app** - Similar to Render, great for Node.js
-- **Fly.io** - Global edge deployment
-- **Heroku** - Classic PaaS (requires credit card)
-- **AWS ECS/Fargate** - For production scale
-
-**Frontend Alternatives:**
-- **Netlify** - Similar to Vercel
-- **Cloudflare Pages** - Fast global CDN
-- **GitHub Pages** - Free static hosting (requires adapter)
-
-**Database Alternatives:**
-- **Supabase** - Free PostgreSQL with excellent free tier
-- **Railway** - Includes PostgreSQL in free tier
-- **Neon** - Serverless Postgres
-- **PlanetScale** - MySQL alternative (requires schema changes)
+**Frontend (Vercel):**
+1. Import project on Vercel
+2. Set root directory to `packages/frontend`
+3. Framework will auto-detect as SvelteKit
+4. Add environment variable: `PUBLIC_BACKEND_URL` (your Render backend URL)
+5. Deploy!
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
-### Database Connection Failed
+**Database connection fails:**
+- Make sure Docker is running: `docker ps`
+- Restart: `docker-compose restart`
+- Check the DATABASE_URL in your `.env` file
 
-```
-Error: Can't reach database server
-```
+**Groq API errors:**
+- Verify your API key is correct
+- Get a free key at https://console.groq.com/
+- Make sure there are no spaces or quotes around the key
 
-**Solution:**
-1. Ensure Docker is running: `docker ps`
-2. Restart PostgreSQL: `docker-compose restart`
-3. Check DATABASE_URL in `.env`
-
-### Groq API Errors
-
-```
-Error: Invalid API key
-```
-
-**Solution:**
-1. Verify GROQ_API_KEY in `.env`
-2. Get a free key at https://console.groq.com/
-3. Check for typos (common issue!)
-
-### Port Already in Use
-
-```
-Error: listen EADDRINUSE :::3000
-```
-
-**Solution:**
+**Port already in use:**
 ```bash
-# Find process using port 3000
+# Windows
 netstat -ano | findstr :3000
-# Kill it (Windows)
 taskkill /F /PID <PID>
-# Or use a different port in .env
+
+# Mac/Linux
+lsof -ti:3000 | xargs kill
 ```
 
-### Frontend Can't Connect to Backend
+**Frontend can't connect to backend:**
+- Check backend is running: open http://localhost:3000/health
+- Look at browser console for connection errors
+- Verify the backend URL in ChatWidget.svelte
 
-**Solution:**
-1. Check backend is running: `curl http://localhost:3000/health`
-2. Check CORS is enabled in `server.ts`
-3. Verify `backendUrl` in `ChatWidget.svelte`
-
----
-
-## 📚 Additional Resources
-
-- **Groq Documentation:** https://console.groq.com/docs/
-- **SvelteKit Docs:** https://kit.svelte.dev/
-- **Prisma Docs:** https://www.prisma.io/docs/
-- **Socket.IO Docs:** https://socket.io/docs/
-- **Fastify Docs:** https://fastify.dev/
+**Render backend is slow:**
+- First request after sleep takes 30-60 seconds (free tier limitation)
+- Subsequent requests are instant
+- Upgrade to paid tier for always-on service
 
 ---
 
-## 📝 License
+## Testing Ideas
 
-MIT License - feel free to use this project however you'd like!
+Try these conversations to see how the AI handles different scenarios:
+
+**Product questions:**
+- "Do you sell headphones?"
+- "What laptops do you have for students?"
+- "I need a gift for a tech enthusiast"
+
+**Policy questions:**
+- "What's your return policy?"
+- "Do you ship internationally?"
+- "How long does shipping take?"
+
+**Support issues:**
+- "My order hasn't arrived"
+- "I want to return something"
+- "Do you offer warranty?"
+
+**Test memory:**
+- Ask about a product
+- Then ask "What colors does it come in?"
+- The AI should remember what product you asked about
+
+**Test persistence:**
+- Have a conversation
+- Refresh the page
+- Your messages should still be there
 
 ---
 
-## 👨‍💻 Author
+## Contact
 
-Built with ❤️ by **Harsh** for the Spur Founding Engineer take-home assignment.
+Built by **Harsh Khetia**
 
-**Contact:**
 - GitHub: https://github.com/harsh01369
 - Email: work.harshkhetia@gmail.com
 - LinkedIn: https://www.linkedin.com/in/harsh-khetia111/
 
 ---
 
-## 🙏 Acknowledgments
+## License
 
-- **Spur Team** for the opportunity and clear requirements
-- **Groq** for providing fast, affordable LLM inference
-- **Svelte & SvelteKit** communities for amazing tools
-- **Prisma** for making database work enjoyable
-- **DaisyUI** for beautiful UI components
+MIT - Feel free to use this however you want!
 
 ---
 
-**⭐ If you found this project helpful, please give it a star!**
+**If you found this helpful, give it a star ⭐**
